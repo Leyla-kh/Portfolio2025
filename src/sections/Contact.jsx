@@ -1,0 +1,163 @@
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
+import TitleHeader from "../components/TitleHeader";
+import ContactExperience from "../components/models/contact/ContactExperience";
+import Earth from "../components/Earth";
+
+const Contact = () => {
+  const formRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await emailjs.sendForm(
+        import.meta.env.VITE_APP_EMAILJS_ID,
+        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+      );
+
+      setForm({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section className="flex-center section-padding" id="contact">
+      <div className="w-full h-full md:px-10 px-5">
+        <TitleHeader
+          title="Get in Touch – Let’s Connect"
+          sub="💬 Have questions or ideas?  Let’s talk! 🚀"
+        />
+
+        <div className="grid-12-cols mt-16">
+          <div className="xl:col-span-7">
+            <div className="flex-center card-border rounded-xl p-10">
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className="w-full flex flex-col gap-7"
+              >
+                <div>
+                  <label htmlFor="name">Your name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="What’s your good name?"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email">Your Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="What’s your email address?"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message">Your Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={form.message}
+                    onChange={handleChange}
+                    placeholder="How can I help you?"
+                    rows="5"
+                    required
+                  />
+                </div>
+
+                <button type="submit" disabled={loading}>
+                  <div className="cta-button group">
+                    <div className="bg-circle" />
+                    <p className="text">
+                      {loading ? "Sending..." : "Send Message"}
+                    </p>
+                    <div className="arrow-wrapper">
+                      <img src="/images/arrow-down.svg" alt="arrow" />
+                    </div>
+                  </div>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div className="xl:col-span-5 min-h-96">
+            <div className="bg-linear-65 from-sky-950 to-violet-900 w-full h-full rounded-3xl overflow-hidden flex-center flex-col p-5 ">
+              <div className="relative">
+                <p className="font-mono text-6xl font-semibold text-center mb-10 z-20 ">
+                  CONTACT ME
+                </p>
+                <p className="font-mono m-5 mx-10 text-center tracking-wider leading-8 z-20">
+                  Let’s build something great together! I’m open to new
+                  opportunities and collaborations
+                </p>
+
+                <div className="group ">
+                  <img
+                    src="/images/phone-22.png"
+                    className="absolute -top-[25%] left-[50%] -rotate-15 opacity-0 group-hover:opacity-100 w-12 group-hover:scale-100"
+                  />
+                  <img
+                    src="/images/phone-11.png "
+                    className="absolute -top-[25%] left-[50%] -rotate-15 group-hover:opacity-0 w-12 group-hover:scale-50 "
+                  />
+                </div>
+
+                <div className="group">
+                  <img
+                    src="/images/mail-2.png"
+                    className="absolute bottom-[55%] right-[5%] rotate-30 opacity-0 group-hover:opacity-100 w-12 group-hover:scale-100"
+                  />
+                  <img
+                    src="/images/mail-1.png "
+                    className="absolute bottom-[55%] right-[5%] rotate-25 group-hover:opacity-0 w-12 group-hover:scale-50 "
+                  />
+                </div>
+
+                <div className="group">
+                  <img
+                    src="/images/mobile-2.png"
+                    className="absolute top-[15%] left-[5%] -rotate-30 opacity-0 group-hover:opacity-100 w-12 group-hover:scale-100"
+                  />
+                  <img
+                    src="/images/mobile-1.png "
+                    className="absolute top-[15%]  left-[5%] -rotate-25 group-hover:opacity-0 w-12 group-hover:scale-50 "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Contact;
